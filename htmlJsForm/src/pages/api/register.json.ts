@@ -14,6 +14,10 @@ export const POST: APIRoute = async ({ request }) => {
 
     await sleep(1000);
 
+    if (email === "test@error.com"){
+        throw new Error("Test Error");
+    }
+
     return new Response(
       JSON.stringify({
         message: "Success",
