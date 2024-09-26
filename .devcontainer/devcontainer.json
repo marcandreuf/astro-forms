@@ -10,9 +10,10 @@
 	"features": {
 		"ghcr.io/devcontainers/features/git:1": {}
 	},
+	// NOTE: adjust your git and ssh key locations as needed or remove this mounts and use git outside the container.
 	"mounts": [
-		"source=/home/madpad/.gitconfig-itql,target=/home/node/.gitconfig,type=bind,consistency=cached",
-		"source=/home/madpad/.ssh/id_ed25519_itqualab,target=/home/node/.ssh/id_ed25519_itqualab,type=bind,consistency=cached"
+		"source=${localEnv:HOME}/.gitconfig-itql,target=/home/node/.gitconfig,type=bind,consistency=cached",
+		"source=${localEnv:HOME}/.ssh/id_ed25519_itqualab,target=/home/node/.ssh/id_ed25519_itqualab,type=bind,consistency=cached"
 	],
 	"customizations": {
 		"vscode": {
