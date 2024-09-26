@@ -1,0 +1,136 @@
+---
+// export const prerender = false;
+---
+
+<form id="regForm" method="POST">
+  <div class="flex flex-col gap-2 bg-slate-400 p-4">
+    <h1>Register</h1>
+    <label>
+      Username:
+      <input type="text" name="username" 
+      class="border-2 border-black" 
+      value="test name"
+      />
+    </label>
+    <label>
+      Email:
+      <input type="email" name="email" required 
+      value="test@email.com"
+      class="border-2 border-black" />
+    </label>
+    <label>
+      Password:
+      <input
+        type="password"
+        name="password"
+        required
+        value="12345678"
+        minlength="6"
+        class="border-2 border-black"
+      />
+    </label>
+    <button type="submit" class="w-full mt-1 bg-blue-800 rounded-lg">
+      <!--SVG loading -->
+      <svg
+        id="form-loading"
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        class="icon icon-tabler icons-tabler-outline icon-tabler-loader-2
+        hidden size-5 animate-spin mr-2">
+        <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+        <path d="M12 3a9 9 0 1 0 9 9"></path>
+      </svg>
+      <p class="text-white">Send</p>
+    </button>
+  </div>
+</form>
+
+<dialog
+  id="form-good-feedback"
+  class="invisible fixed bottom-4 z-10 mx-auto flex rounded-lg
+    bg-green-700 p-0 text-green-200 opacity-0 transition duration-300"
+>
+  <div class="p-4 text-center">
+    <p>Thank you, all OK.</p>
+  </div>
+</dialog>
+
+<dialog
+  id="form-bad-feedback"
+  class="invisible fixed bottom-4 z-10 mx-auto flex rounded-lg
+    bg-red-700 p-0 text-red-200 opacity-0 transition duration-300"
+>
+  <div class="p-4 text-center">
+    <p>Something went wrong.</p>
+  </div>
+</dialog>
+
+<script>
+  const form = document.getElementById("regForm") as HTMLFormElement;
+  const formLoadingIndicator = document.getElementById("form-loading");
+  const formGoodFeedback = document.getElementById("form-good-feedback");
+  const formBadFeedback = document.getElementById("form-bad-feedback");
+
+  const handleFormSubmission = async (e: Event) => {
+    e.preventDefault();
+    try {
+      formLoadingIndicator?.classList.remove("hidden");
+
+      const formData = new FormData(e.currentTarget as HTMLFormElement);
+      const name = formData.get("username");
+      const email = formData.get("email");
+      const password = formData.get("password");
+      const jsonBody = JSON.stringify({ name, email, password });
+      const response = await fetch("/api/register.json", {
+        headers: { "Content-Type": "application/json"},
+        method: "POST",
+        body: jsonBody,
+      });
+      
+      if (response.ok) {
+        form?.reset();
+
+        if (formGoodFeedback) {
+          formGoodFeedback.classList.remove("invisible");
+          formGoodFeedback.classList.add("opacity-100");
+
+          setTimeout(() => {
+            formGoodFeedback.classList.remove("opacity-100");
+            setTimeout(() => {
+              formGoodFeedback.classList.add("invisible");
+            }, 300);
+          }, 5000);
+        }
+      } else {
+        console.error("HTTP error:", response.status);
+        if (formBadFeedback) {
+          formBadFeedback.classList.remove("invisible");
+          formBadFeedback.classList.add("opacity-100");
+          setTimeout(() => {
+            formBadFeedback.classList.remove("opacity-100");
+            setTimeout(() => {
+              formBadFeedback.classList.add("invisible");
+            }, 300);
+          }, 7000);
+        }
+        try {
+          const errorResponse = await response.json();
+          const message = `Form submission failed with error: ${errorResponse.message}`;
+          console.log(message);
+        } catch (error) {
+          console.log("Error parsing error response:", error);
+        }
+      }
+      formLoadingIndicator?.classList.add("hidden");
+    } catch (error) {
+      console.error("Fetch error:", error);
+    }
+  };
+
+  form?.addEventListener("submit", handleFormSubmission);
+</script>
