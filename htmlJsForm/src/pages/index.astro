@@ -1,7 +1,7 @@
 ---
 import ApiForm from "../components/ApiForm.astro";
 
-
+import { ViewTransitions } from 'astro:transitions';
 ---
 
 <html lang="en">
@@ -10,7 +10,8 @@ import ApiForm from "../components/ApiForm.astro";
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<meta name="viewport" content="width=device-width" />
 		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
+		<title>Test Astro Html Form with JS</title>
+		<ViewTransitions fallback="swap" />
 	</head>
 	<body>
 		<h1>Index page content</h1>

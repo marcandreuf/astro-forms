@@ -1,5 +1,5 @@
 ---
-// export const prerender = false;
+export const prerender = false;
 ---
 
 <form id="regForm" method="POST">
@@ -71,13 +71,13 @@
 </dialog>
 
 <script>
-  const form = document.getElementById("regForm") as HTMLFormElement;
-  const formLoadingIndicator = document.getElementById("form-loading");
-  const formGoodFeedback = document.getElementById("form-good-feedback");
-  const formBadFeedback = document.getElementById("form-bad-feedback");
-
+  
   const handleFormSubmission = async (e: Event) => {
     e.preventDefault();
+    const form = document.getElementById("regForm") as HTMLFormElement;
+    const formLoadingIndicator = document.getElementById("form-loading");
+    const formGoodFeedback = document.getElementById("form-good-feedback");
+    const formBadFeedback = document.getElementById("form-bad-feedback");
     try {
       formLoadingIndicator?.classList.remove("hidden");
 
@@ -132,5 +132,6 @@
     }
   };
 
+  
   form?.addEventListener("submit", handleFormSubmission);
 </script>
